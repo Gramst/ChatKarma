@@ -121,3 +121,4 @@ SECRET.py
 *.db
 vnv/*
 log.txt
+*.swp

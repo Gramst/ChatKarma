@@ -9,6 +9,7 @@ from admin_db import admin_db
 from bite import make_bite
 from admin_set import admin_set
 from karma_change import karma_change
+from social import social
 
 from settings import *
 from SECRET import *
@@ -24,6 +25,19 @@ def get_command_from_user_message(text: str) -> str:
             return ''
         for i in COM.keys():
             finded = [j for j in COM[i] if j == _txt]
+            if finded:
+                return i
+    return ''
+
+def get_startswith_command(text: str) -> str:
+    if text:
+        _txt = text.split(':', maxsplit = 1)
+        if len(_txt) >= 2:
+            _txt = _txt[1].strip().lower()
+        else:
+            return ''
+        for i in COM.keys():
+            finded = [j for j in COM[i] if _txt.startswith(j)]
             if finded:
                 return i
     return ''
@@ -56,6 +70,8 @@ if __name__ == "__main__":
         else:
             #COMMANDS
             user_command = get_command_from_user_message(cs.message) 
+            user_stw_comm = get_startswith_command(cs.message)
+            logging.info(f'USER COM {user_command}')
             if user_command == 'help':
                 logging.info(str(cs.m_nick) + " help use")
                 await event.reply('/msg ' + TEXT_HELP)
@@ -67,10 +83,12 @@ if __name__ == "__main__":
                 else:
                     await event.reply("/msg Карма: {0}\n[{1}] {2:<4}🎭".format(cs.m_nick, cs.m_hash, cs.m_karma))
                     await event.reply("/del")
-            elif cs.command == 'ktop':
+            elif user_command == 'ktop':
                 await form_top_karma(event, cs)
-            elif cs.command == 'bite':
+            elif user_command == 'bite':
                 await make_bite(event, cs)
+            elif user_stw_comm == 'soci':
+                await social(event, cs)
             #STATUS    
             log.info(f'{cs.status}, {cs.m_karma}, {cs.s_nick}')
             if cs.status == 'ch_nick':

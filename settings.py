@@ -28,6 +28,8 @@ COM = { 'help' : ['карма?', 'karma?'],
         'karm' : ['karm', 'карма'],
         'a_db' : ['karma clean','очистить базу'],
         'a_ks' : ['set', 'уст'],
+        'soci' : ['soc', 'соц'],
+
         }
 
 

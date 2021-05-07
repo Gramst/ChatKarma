@@ -87,7 +87,7 @@ if __name__ == "__main__":
                 await form_top_karma(event, cs)
             elif user_command == 'bite':
                 await make_bite(event, cs)
-            elif user_stw_comm == 'soci':
+            elif user_stw_comm == 'soci': #TODO условия
                 await social(event, cs)
             #STATUS    
             log.info(f'{cs.status}, {cs.m_karma}, {cs.s_nick}')

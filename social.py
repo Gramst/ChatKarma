@@ -40,10 +40,11 @@ def find_social_from_text(text: str) -> str:
 
 def form_help() -> str:
     res = 'Это социальная часть бота, позволяет отправлять заранее заготовленные сообщения, и свои'\
-    '. Синтаксис: соц команда'
+    '. Синтаксис: соц команда @1 тот кто отправляет @2 тот кому отправляют'
     for i in SOCIALS.keys():
         if i != '?':
-            res += f"\nсоц {SOCIALS[i]} == {S_TEXT[i].format('1-st', '2-nd')}"
+            res += f"\nсоц {SOCIALS[i]} == {S_TEXT[i].format('@1', '@2')}"
+    res += '\nДля отправки своего сообщения отправляете фразу начинающуюся на соц c метками @1 @2. @1 - ваш ник @2 - ник из реплая или будет откинуто и замененно пробелом'
     return res
 
 async def social(event, cs: 'ChatScript') -> None:
@@ -56,12 +57,12 @@ async def social(event, cs: 'ChatScript') -> None:
         if s:
             await _.reply(S_TEXT[s].format(cs.m_nick, cs.s_nick))
         elif custom:
-            await _.reply(f'{cs.m_nick} {custom} {cs.s_nick}')
+            await _.reply('/say ' + custom.replace('@1', cs.m_nick).replace('@2', cs.s_nick))
     else:
         if s:
             await event.reply(S_TEXT_SELF[s].format(cs.m_nick))
         elif custom:
-            await event.reply(f'{cs.m_nick} {custom}')
+            await _.reply('/say ' + custom.replace('@1', cs.m_nick).replace('@2',''))
     await event.reply('/del')
 
             

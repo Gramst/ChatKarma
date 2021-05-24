@@ -52,7 +52,7 @@ if __name__ == "__main__":
     async def normal_handler(event):
 
         cs.message = event.message.to_dict()
-        print(event.message.to_dict())
+        #print(event.message.to_dict())
         logging.info("MSG: " + str(cs._message.raw_text))
         logging.info(str(cs.m_nick) + ' (' + str(cs.status) + ') to ' + str(cs.s_nick))
 

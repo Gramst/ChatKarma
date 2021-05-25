@@ -4,7 +4,7 @@ log = logging.getLogger('social')
 
 SOCIALS = {
     'smile' : ['sm', 'ул'],
-    'laugh' : ['la', 'смех'],
+    'laugh' : ['la', 'смех', 'см'],
     '?'     : ['?'],
 }
 
@@ -44,25 +44,28 @@ def form_help() -> str:
     for i in SOCIALS.keys():
         if i != '?':
             res += f"\nсоц {SOCIALS[i]} == {S_TEXT[i].format('@1', '@2')}"
-    res += '\nДля отправки своего сообщения отправляете фразу начинающуюся на соц c метками @1 @2. @1 - ваш ник @2 - ник из реплая или будет откинуто и замененно пробелом'
+    res += '\nДля отправки своего сообщения отправляете фразу начинающуюся на соц c метками @1 @2.'\
+    ' @1 - ваш ник @2 - ник из реплая или будет откинуто и замененно пробелом'
     return res
 
 async def social(event, cs: 'ChatScript') -> None:
-    _ = await event.message.get_reply_message()
-    s, custom = find_social_from_text(cs.message)
-    if s and s == '?':
-        h = form_help();
-        await event.reply(f'/msg {h}')
-    elif _ and cs.m_nick and cs.s_nick:
-        if s:
-            await _.reply(S_TEXT[s].format(cs.m_nick, cs.s_nick))
-        elif custom:
-            await _.reply('/say ' + custom.replace('@1', cs.m_nick).replace('@2', cs.s_nick))
-    else:
-        if s:
-            await event.reply(S_TEXT_SELF[s].format(cs.m_nick))
-        elif custom:
-            await _.reply('/say ' + custom.replace('@1', cs.m_nick).replace('@2',''))
+    if cs.m_karma >= 0:
+        _ = await event.message.get_reply_message()
+            
+        s, custom = find_social_from_text(cs.message)
+        if s and s == '?':
+            h = form_help();
+            await event.reply(f'/msg {h}')
+        elif _ and cs.m_nick and cs.s_nick:
+            if s:
+                await _.reply(S_TEXT[s].format(cs.m_nick, cs.s_nick))
+            elif custom:
+                await _.reply('% ' + custom.replace('@1', cs.m_nick).replace('@2', cs.s_nick))
+        else:
+            if s:
+                await event.reply(S_TEXT_SELF[s].format(cs.m_nick))
+            elif custom:
+                await event.reply('% ' + custom.replace('@1', cs.m_nick).replace('@2',''))
     await event.reply('/del')
 
             

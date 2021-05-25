@@ -1,4 +1,5 @@
 import logging
+from settings import KARMA_SOC
 
 log = logging.getLogger('social')
 
@@ -49,23 +50,26 @@ def form_help() -> str:
     return res
 
 async def social(event, cs: 'ChatScript') -> None:
-    if cs.m_karma >= 0:
+    if cs.m_nick:
         _ = await event.message.get_reply_message()
             
         s, custom = find_social_from_text(cs.message)
-        if s and s == '?':
-            h = form_help();
-            await event.reply(f'/msg {h}')
-        elif _ and cs.m_nick and cs.s_nick:
-            if s:
-                await _.reply(S_TEXT[s].format(cs.m_nick, cs.s_nick))
-            elif custom:
-                await _.reply('% ' + custom.replace('@1', cs.m_nick).replace('@2', cs.s_nick))
+        if cs.m_karma >= KARMA_SOC:
+            if s and s == '?':
+                h = form_help();
+                await event.reply(f'/msg {h}')
+            elif _ and cs.m_nick and cs.s_nick:
+                if s:
+                    await _.reply(S_TEXT[s].format(cs.m_nick, cs.s_nick))
+                elif custom:
+                    await _.reply('% ' + custom.replace('@1', cs.m_nick).replace('@2', cs.s_nick))
+            else:
+                if s:
+                    await event.reply(S_TEXT_SELF[s].format(cs.m_nick))
+                elif custom:
+                    await event.reply('% ' + custom.replace('@1', cs.m_nick).replace('@2',''))
         else:
-            if s:
-                await event.reply(S_TEXT_SELF[s].format(cs.m_nick))
-            elif custom:
-                await event.reply('% ' + custom.replace('@1', cs.m_nick).replace('@2',''))
+            event.reply(f'/msg для использования этого карма должна быть >={KARMA_SOC}')
     await event.reply('/del')
 
             
